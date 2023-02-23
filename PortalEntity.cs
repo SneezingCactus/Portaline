@@ -64,7 +64,22 @@ public class PortalEntity : Entity {
     if (player != null) {
       PortalEntity opposingPortal = isOrangePortal ? Instance.bluePortal : Instance.orangePortal;
 
+      // check if opposing portal exists
       if (opposingPortal == null) return false;
+
+      // check if opposing portal is obstructed
+      float oriRotation = 0;
+
+      switch (opposingPortal.orientation) {
+        case 0: oriRotation = 0; break;
+        case 1: oriRotation = (float)Math.PI; break;
+        case 2: oriRotation = (float)Math.PI * 0.5f; break;
+        case 3: oriRotation = (float)Math.PI * 1.5f; break;
+      }
+
+      Rectangle frontRect = opposingPortal.RectFromVectors(new Vector2(2, 0).Rotate(oriRotation), new Vector2(3, 16).Rotate(oriRotation));
+
+      if (Scene.CollideFirst<Solid>(frontRect) != null) return false;
 
       // same orientation portals
       if (orientation == opposingPortal.orientation) {
@@ -128,16 +143,16 @@ public class PortalEntity : Entity {
       return false;
     }
 
+    float oriRotation = 0;
+
+    switch (orientation) {
+      case 0: oriRotation = 0; break;
+      case 1: oriRotation = (float)Math.PI; break;
+      case 2: oriRotation = (float)Math.PI * 0.5f; break;
+      case 3: oriRotation = (float)Math.PI * 1.5f; break;
+    }
+
     for (int i = 0; i < 100; i++) {
-      float oriRotation = 0;
-
-      switch (orientation) {
-        case 0: oriRotation = 0; break;
-        case 1: oriRotation = (float)Math.PI; break;
-        case 2: oriRotation = (float)Math.PI * 0.5f; break;
-        case 3: oriRotation = (float)Math.PI * 1.5f; break;
-      }
-
       // obstruction (stuff in front of the portal)
       bool noObstruction = false;
 
@@ -188,7 +203,7 @@ public class PortalEntity : Entity {
     return false;
   }
 
-  private Rectangle RectFromVectors(Vector2 position, Vector2 size) {
+  public Rectangle RectFromVectors(Vector2 position, Vector2 size) {
     return new(
       (int)Math.Round(Position.X + position.X - Math.Abs(size.X) / 2),
       (int)Math.Round(Position.Y + position.Y - Math.Abs(size.Y) / 2),
