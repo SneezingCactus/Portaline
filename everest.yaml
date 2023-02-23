@@ -1,0 +1,6 @@
+- Name: Portaline
+  Version: 1.0.0
+  DLL: bin/Portaline.dll
+  Dependencies:
+    - Name: Everest
+      Version: 1.3471.0
