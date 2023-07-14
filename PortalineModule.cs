@@ -6,10 +6,14 @@ using Monocle;
 
 namespace Celeste.Mod.Portaline {
   public class PortalineModule : EverestModule {
+    public bool PortalineEnabled { get => Session.PortalineEnabled || Settings.PortalGunAlwaysEnabled; }
     public static PortalineModule Instance { get; private set; }
 
     public override Type SettingsType => typeof(PortalineModuleSettings);
     public static PortalineModuleSettings Settings => (PortalineModuleSettings) Instance._Settings;
+
+    public override Type SessionType => typeof(PortalineModuleSession);
+    public static PortalineModuleSession Session => (PortalineModuleSession) Instance._Session;
 
     private static MouseState State => Mouse.GetState();
 
@@ -73,7 +77,7 @@ namespace Celeste.Mod.Portaline {
     private void LevelRender(On.Celeste.Level.orig_Render orig, Level self) {
       orig(self);
 
-      if (!Settings.PortalGunEnabled) return;
+      if (!PortalineEnabled) return;
 
       Draw.SpriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Engine.ScreenMatrix);
       Draw.SpriteBatch.Draw(aimTex, CursorPos, null, Color.White, 0f, new Vector2(aimTex.Width / 2f, aimTex.Height / 2f), 4f, 0, 0f);
@@ -86,7 +90,7 @@ namespace Celeste.Mod.Portaline {
       orig(self);
 
       // portal gun enabled / in cutscene check
-      if ((!Settings.PortalGunEnabled || self.InCutscene) && (bluePortal != null || orangePortal != null)) {
+      if ((!PortalineEnabled || self.InCutscene) && (bluePortal != null || orangePortal != null)) {
         Audio.Play("event:/sneezingcactus/portal_remove");
         bluePortal?.Kill();
         orangePortal?.Kill();
@@ -104,7 +108,7 @@ namespace Celeste.Mod.Portaline {
     private void PlayerRender(On.Celeste.Player.orig_Render orig, Player self) {
       orig(self);
 
-      if (!Settings.PortalGunEnabled) return;
+      if (!PortalineEnabled) return;
 
       Vector2 gunVector = ToCursor(self, CursorPos);
 
@@ -134,7 +138,7 @@ namespace Celeste.Mod.Portaline {
     private void PlayerUpdate(On.Celeste.Player.orig_Update orig, Player self) {
       orig(self);
 
-      if (!Settings.PortalGunEnabled) return;
+      if (!PortalineEnabled) return;
 
       // cursor pos update
       if (joystickAim.Value.LengthSquared() > 0.04f) {
@@ -157,7 +161,7 @@ namespace Celeste.Mod.Portaline {
       if (self.Scene == null || self.Scene.TimeActive <= 0f || (TalkComponent.PlayerOver != null && Input.Talk.Pressed)) {
         return;
       }
-      
+
       if (Settings.RemovePortals.Pressed) {
         Audio.Play("event:/sneezingcactus/portal_remove");
         bluePortal?.Kill();
@@ -180,7 +184,7 @@ namespace Celeste.Mod.Portaline {
     }
 
     private void PlayerCollideH(On.Celeste.Player.orig_OnCollideH orig, Player self, CollisionData data) {
-      if (!Settings.PortalGunEnabled) {
+      if (!PortalineEnabled) {
         orig(self, data);
         return;
       }
@@ -191,12 +195,12 @@ namespace Celeste.Mod.Portaline {
       changedMe = (Instance.orangePortal?.HighPriorityUpdate(self) ?? false) || changedMe;
 
       if (changedMe) return;
-      
+
       orig(self, data);
     }
 
     private void PlayerCollideV(On.Celeste.Player.orig_OnCollideV orig, Player self, CollisionData data) {
-      if (!Settings.PortalGunEnabled) {
+      if (!PortalineEnabled) {
         orig(self, data);
         return;
       }
@@ -207,7 +211,7 @@ namespace Celeste.Mod.Portaline {
       changedMe = (Instance.orangePortal?.HighPriorityUpdate(self) ?? false) || changedMe;
 
       if (changedMe) return;
-      
+
       orig(self, data);
     }
 
