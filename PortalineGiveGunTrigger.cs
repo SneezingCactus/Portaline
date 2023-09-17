@@ -11,11 +11,17 @@ namespace Celeste.Mod.Portaline
     [CustomEntity("Portaline/PortalineGiveGunTrigger")]
     internal class PortalineGiveGunTrigger : Trigger
     {
-        private readonly bool givenGun;
+        private readonly bool enabled;
 
         public PortalineGiveGunTrigger(EntityData data, Vector2 offset) : base(data, offset)
         {
-            givenGun = data.Bool("givenGun");
+            enabled = data.Bool("portalgunenabled");
+        }
+
+        public override void OnEnter(Player player)
+        {
+            base.OnEnter(player);
+            PortalineModule.Session.PortalGunEnabled = enabled;
         }
     }
 }
