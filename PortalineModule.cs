@@ -75,7 +75,7 @@ namespace Celeste.Mod.Portaline {
     private void LevelRender(On.Celeste.Level.orig_Render orig, Level self) {
       orig(self);
 
-      if (!Settings.PortalGunEnabled || !Session.PortalGunEnabled) return;
+      if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) return;
 
       Draw.SpriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Engine.ScreenMatrix);
       Draw.SpriteBatch.Draw(aimTex, CursorPos, null, Color.White, 0f, new Vector2(aimTex.Width / 2f, aimTex.Height / 2f), 4f, 0, 0f);
@@ -88,7 +88,7 @@ namespace Celeste.Mod.Portaline {
       orig(self);
 
       // portal gun enabled / in cutscene check
-      if ((!Settings.PortalGunEnabled || !Session.PortalGunEnabled || self.InCutscene) && (bluePortal != null || orangePortal != null)) {
+      if ((!(Settings.PortalGunEnabled || Session.PortalGunEnabled) || self.InCutscene) && (bluePortal != null || orangePortal != null)) {
         Audio.Play("event:/sneezingcactus/portal_remove");
         bluePortal?.Kill();
         orangePortal?.Kill();
@@ -106,7 +106,7 @@ namespace Celeste.Mod.Portaline {
     private void PlayerRender(On.Celeste.Player.orig_Render orig, Player self) {
       orig(self);
 
-      if (!Settings.PortalGunEnabled || !Session.PortalGunEnabled) return;
+     if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) return;
 
       Vector2 gunVector = ToCursor(self, CursorPos);
 
@@ -136,7 +136,7 @@ namespace Celeste.Mod.Portaline {
     private void PlayerUpdate(On.Celeste.Player.orig_Update orig, Player self) {
       orig(self);
 
-      if (!Settings.PortalGunEnabled || !Session.PortalGunEnabled) return;
+      if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) return;
 
       // cursor pos update
       if (joystickAim.Value.LengthSquared() > 0.04f) {
@@ -182,7 +182,7 @@ namespace Celeste.Mod.Portaline {
     }
 
     private void PlayerCollideH(On.Celeste.Player.orig_OnCollideH orig, Player self, CollisionData data) {
-      if (!Settings.PortalGunEnabled || !Session.PortalGunEnabled) {
+      if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) {
         orig(self, data);
         return;
       }
@@ -198,7 +198,7 @@ namespace Celeste.Mod.Portaline {
     }
 
     private void PlayerCollideV(On.Celeste.Player.orig_OnCollideV orig, Player self, CollisionData data) {
-      if (!Settings.PortalGunEnabled || !Session.PortalGunEnabled) {
+      if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) {
         orig(self, data);
         return;
       }
