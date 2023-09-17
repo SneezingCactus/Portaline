@@ -51,7 +51,10 @@ namespace Celeste.Mod.Portaline {
       On.Celeste.Player.OnCollideV += PlayerCollideV;
       On.Celeste.Level.Render += LevelRender;
       On.Celeste.Level.Update += LevelUpdate;
+      Everest.Events.Level.OnEnter += EverestEnterMethod;
+      Everest.Events.Level.OnExit += EverestExitMethod;
     }
+
 
     public override void Unload() {
       On.Celeste.Player.Render -= PlayerRender;
@@ -60,8 +63,17 @@ namespace Celeste.Mod.Portaline {
       On.Celeste.Player.OnCollideV -= PlayerCollideV;
       On.Celeste.Level.Render -= LevelRender;
       On.Celeste.Level.Update -= LevelUpdate;
-    }
+      Everest.Events.Level.OnEnter -= EverestEnterMethod;
 
+    }
+    private void EverestExitMethod(Level level, LevelExit exit, LevelExit.Mode mode, Session session, HiresSnow snow)
+    {
+      Settings.PortalGunEnabled = Session.oldEnabledConfig;
+    }
+    private void EverestEnterMethod(Session session, bool fromSaveData)
+    {
+      Session.oldEnabledConfig = Settings.PortalGunEnabled;
+    }
     public override void OnInputInitialize() {
       base.OnInputInitialize();
       joystickAim = new VirtualJoystick(true, new VirtualJoystick.PadRightStick(Input.Gamepad, 0.1f));

@@ -16,6 +16,7 @@ namespace Celeste.Mod.Portaline
     public override void OnEnter(Player player)
     {
       base.OnEnter(player);
+      if (PortalineModule.Settings.PortalGunEnabled) PortalineModule.Settings.PortalGunEnabled = false;
       PortalineModule.Session.PortalGunEnabled = enabled;
     }
   }
