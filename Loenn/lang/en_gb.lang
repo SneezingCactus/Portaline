@@ -1,6 +1,6 @@
 # GivenGunTrigger
 triggers.Portaline/PortalineGiveGunTrigger.placements.name.portalguntrigger=Enable-Disable Portal Gun (To Mady)
 triggers.Portaline/PortalineGiveGunTrigger.attributes.name.portalgunenabled=Give Gun?
-triggers.Portaline/PortalineGiveGunTrigger.attributes.description.portalgunenabled=A boolean data. Madeline will have the capacity to hand the portal gun when she got in the trigger?
+triggers.Portaline/PortalineGiveGunTrigger.attributes.description.portalgunenabled=A boolean data. Madeline will have the capacity to hand the portal gun when she gets in the trigger?
 
 
