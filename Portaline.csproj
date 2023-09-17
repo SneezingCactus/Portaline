@@ -32,6 +32,10 @@
         </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Loenn\triggers\" />
+    </ItemGroup>
+
     <Choose>
         <When Condition="'$(CelesteType)' == 'FNA'">
             <ItemGroup>
