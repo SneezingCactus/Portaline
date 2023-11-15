@@ -4,3 +4,5 @@ triggers.Portaline/PortalineGiveGunTrigger.attributes.name.portalgunenabled=Give
 triggers.Portaline/PortalineGiveGunTrigger.attributes.description.portalgunenabled=Allow the player to obtain the portal weapon on entry and still have it on exit.
 
 
+entities.Portaline/UnportalableBlock.placements.name.unportalable_block=Unportalable Block
+entities.Portaline/EmancipationGrid.placements.name.emancipation_grill=Emancipation Grill

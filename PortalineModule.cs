@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,6 +19,7 @@ namespace Celeste.Mod.Portaline {
     private Texture2D aimTex;
     private Texture2D aimTexBlue;
     private Texture2D aimTexOrange;
+    public MTexture emancipationGrillTex;
     public MTexture portalTex;
     public MTexture gunTex;
 
@@ -40,6 +42,7 @@ namespace Celeste.Mod.Portaline {
       aimTex = GFX.Game["Portaline/AimIndicator"].Texture.Texture;
       aimTexBlue = GFX.Game["Portaline/AimIndicatorBlue"].Texture.Texture;
       aimTexOrange = GFX.Game["Portaline/AimIndicatorOrange"].Texture.Texture;
+      emancipationGrillTex = GFX.Game["Portaline/EmancipationGrill"];
       gunTex = GFX.Game["Portaline/Gun"];
       portalTex = GFX.Game["Portaline/Portal"];
     }
@@ -53,6 +56,7 @@ namespace Celeste.Mod.Portaline {
       On.Celeste.Level.Update += LevelUpdate;
       Everest.Events.Level.OnEnter += EverestEnterMethod;
       Everest.Events.Level.OnExit += EverestExitMethod;
+      On.Celeste.Level.LoadLevel += LevelBegin;
     }
 
 
@@ -64,6 +68,8 @@ namespace Celeste.Mod.Portaline {
       On.Celeste.Level.Render -= LevelRender;
       On.Celeste.Level.Update -= LevelUpdate;
       Everest.Events.Level.OnEnter -= EverestEnterMethod;
+      On.Celeste.Level.LoadLevel -= LevelBegin;
+    }
 
     }
     private void EverestExitMethod(Level level, LevelExit exit, LevelExit.Mode mode, Session session, HiresSnow snow)
@@ -82,6 +88,11 @@ namespace Celeste.Mod.Portaline {
     public override void OnInputDeregister() {
       base.OnInputDeregister();
       joystickAim?.Deregister();
+    }
+    
+    private void LevelBegin(On.Celeste.Level.orig_LoadLevel orig, Level self, Player.IntroTypes playerIntro, bool isFromLoader) {
+      self.Add(new EmancipationGrillRenderer());
+      orig(self, playerIntro, isFromLoader);
     }
 
     private void LevelRender(On.Celeste.Level.orig_Render orig, Level self) {
@@ -171,6 +182,19 @@ namespace Celeste.Mod.Portaline {
       if (self.Scene == null || self.Scene.TimeActive <= 0f || (TalkComponent.PlayerOver != null && Input.Talk.Pressed)) {
         return;
       }
+
+      foreach (EmancipationGrill entity in self.Scene.Tracker.GetEntities<EmancipationGrill>())
+			{
+				if (self.CollideCheck(entity) && (bluePortal != null || orangePortal != null))
+				{
+          Audio.Play("event:/sneezingcactus/portal_remove");
+          bluePortal?.Kill();
+          orangePortal?.Kill();
+          bluePortal = null;
+          orangePortal = null;
+          return;
+				}
+			}
       
       if (Settings.RemovePortals.Pressed) {
         Audio.Play("event:/sneezingcactus/portal_remove");
