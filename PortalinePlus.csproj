@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net452</TargetFramework>
-        <AssemblyName>Portaline</AssemblyName>
+        <AssemblyName>PortalinePlus</AssemblyName>
         <RootNamespace>Celeste.Mod.Portaline</RootNamespace>
         <LangVersion>latest</LangVersion>
         <CelestePrefix Condition="'$(CelestePrefix)' == '' And Exists('..\..\Celeste.exe')">..\..</CelestePrefix>
@@ -24,22 +24,26 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="$(CelestePrefix)\Celeste.exe">
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="$(CelestePrefix)\MMHOOK_Celeste.dll">
-            <Private>false</Private>
-        </Reference>
+      <Folder Include="Loenn\triggers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Celeste">
+        <HintPath>..\..\Documents\Documentos Krs\13) Celeste\2 Mode Coding\Celeste.exe</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Xna.Framework">
+        <HintPath>..\..\Documents\Documentos Krs\13) Celeste\2 Mode Coding\Microsoft.Xna.Framework.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Xna.Framework.Graphics">
+        <HintPath>..\..\..\..\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Graphics.dll</HintPath>
+      </Reference>
+      <Reference Include="MMHOOK_Celeste">
+        <HintPath>..\..\Documents\Documentos Krs\13) Celeste\2 Mode Coding\MMHOOK_Celeste.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <Choose>
-        <When Condition="'$(CelesteType)' == 'FNA'">
-            <ItemGroup>
-                <Reference Include="$(CelestePrefix)\FNA.dll">
-                    <Private>false</Private>
-                </Reference>
-            </ItemGroup>
-        </When>
+        <When Condition="'$(CelesteType)' == 'FNA'" />
 
         <When Condition="'$(CelesteType)' == 'XNA'">
             <ItemGroup>
