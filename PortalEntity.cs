@@ -52,8 +52,6 @@ public class PortalEntity : Entity {
     this.owner = owner;
     oldOwnerPos = owner.Position;
     (owner.Scene as Level).Add(this);
-
-    Engine.Commands.Log("asd", Color.White);
   }
 
   public bool CollisionCheck(Player executer) {
