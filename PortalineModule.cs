@@ -9,8 +9,6 @@ namespace Celeste.Mod.Portaline {
   public class PortalineModule : EverestModule {
     public static PortalineModule Instance { get; private set; }
 
-    public override Type SessionType => typeof(PortalineModuleSession);
-    public static PortalineModuleSession Session => (PortalineModuleSession) Instance._Session;
     public override Type SettingsType => typeof(PortalineModuleSettings);
     public static PortalineModuleSettings Settings => (PortalineModuleSettings) Instance._Settings;
 
@@ -20,11 +18,14 @@ namespace Celeste.Mod.Portaline {
     private Texture2D aimTexBlue;
     private Texture2D aimTexOrange;
     public MTexture emancipationGrillTex;
+    public MTexture portalGunGiverEdgeTex;
+    public MTexture portalGunGiverSymbolTex;
     public MTexture portalTex;
     public MTexture gunTex;
 
     public PortalEntity bluePortal;
     public PortalEntity orangePortal;
+    public bool gunEnabledInLevel;
 
     private VirtualJoystick joystickAim;
     private Vector2 oldJoystickAim;
@@ -43,6 +44,8 @@ namespace Celeste.Mod.Portaline {
       aimTexBlue = GFX.Game["Portaline/AimIndicatorBlue"].Texture.Texture;
       aimTexOrange = GFX.Game["Portaline/AimIndicatorOrange"].Texture.Texture;
       emancipationGrillTex = GFX.Game["Portaline/EmancipationGrill"];
+      portalGunGiverEdgeTex = GFX.Game["Portaline/PortalGunGiver/edge"];
+      portalGunGiverSymbolTex = GFX.Game["Portaline/PortalGunGiver/symbol"];
       gunTex = GFX.Game["Portaline/Gun"];
       portalTex = GFX.Game["Portaline/Portal"];
     }
@@ -54,8 +57,6 @@ namespace Celeste.Mod.Portaline {
       On.Celeste.Player.OnCollideV += PlayerCollideV;
       On.Celeste.Level.Render += LevelRender;
       On.Celeste.Level.Update += LevelUpdate;
-      Everest.Events.Level.OnEnter += EverestEnterMethod;
-      Everest.Events.Level.OnExit += EverestExitMethod;
       On.Celeste.Level.LoadLevel += LevelBegin;
     }
 
@@ -67,19 +68,9 @@ namespace Celeste.Mod.Portaline {
       On.Celeste.Player.OnCollideV -= PlayerCollideV;
       On.Celeste.Level.Render -= LevelRender;
       On.Celeste.Level.Update -= LevelUpdate;
-      Everest.Events.Level.OnEnter -= EverestEnterMethod;
       On.Celeste.Level.LoadLevel -= LevelBegin;
     }
 
-    }
-    private void EverestExitMethod(Level level, LevelExit exit, LevelExit.Mode mode, Session session, HiresSnow snow)
-    {
-      Settings.PortalGunEnabled = Session.oldEnabledConfig;
-    }
-    private void EverestEnterMethod(Session session, bool fromSaveData)
-    {
-      Session.oldEnabledConfig = Settings.PortalGunEnabled;
-    }
     public override void OnInputInitialize() {
       base.OnInputInitialize();
       joystickAim = new VirtualJoystick(true, new VirtualJoystick.PadRightStick(Input.Gamepad, 0.1f));
@@ -92,13 +83,14 @@ namespace Celeste.Mod.Portaline {
     
     private void LevelBegin(On.Celeste.Level.orig_LoadLevel orig, Level self, Player.IntroTypes playerIntro, bool isFromLoader) {
       self.Add(new EmancipationGrillRenderer());
+      gunEnabledInLevel = false;
       orig(self, playerIntro, isFromLoader);
     }
 
     private void LevelRender(On.Celeste.Level.orig_Render orig, Level self) {
       orig(self);
 
-      if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) return;
+      if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
 
       Draw.SpriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Engine.ScreenMatrix);
       Draw.SpriteBatch.Draw(aimTex, CursorPos, null, Color.White, 0f, new Vector2(aimTex.Width / 2f, aimTex.Height / 2f), 4f, 0, 0f);
@@ -111,7 +103,7 @@ namespace Celeste.Mod.Portaline {
       orig(self);
 
       // portal gun enabled / in cutscene check
-      if ((!(Settings.PortalGunEnabled || Session.PortalGunEnabled) || self.InCutscene) && (bluePortal != null || orangePortal != null)) {
+      if ((!(Settings.PortalGunOverrideEnable || gunEnabledInLevel) || self.InCutscene) && (bluePortal != null || orangePortal != null)) {
         Audio.Play("event:/sneezingcactus/portal_remove");
         bluePortal?.Kill();
         orangePortal?.Kill();
@@ -129,7 +121,7 @@ namespace Celeste.Mod.Portaline {
     private void PlayerRender(On.Celeste.Player.orig_Render orig, Player self) {
       orig(self);
 
-     if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) return;
+     if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
 
       Vector2 gunVector = ToCursor(self, CursorPos);
 
@@ -159,7 +151,17 @@ namespace Celeste.Mod.Portaline {
     private void PlayerUpdate(On.Celeste.Player.orig_Update orig, Player self) {
       orig(self);
 
-      if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) return;
+      foreach (PortalGunGiver entity in self.Scene.Tracker.GetEntities<PortalGunGiver>())
+			{
+        if (self.CollideCheck(entity)) {
+          if (entity.enable && !Instance.gunEnabledInLevel) {
+            Audio.Play("event:/sneezingcactus/portalgun_activation");
+          }
+          Instance.gunEnabledInLevel = entity.enable;
+        }
+      }
+
+      if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
 
       // cursor pos update
       if (joystickAim.Value.LengthSquared() > 0.04f) {
@@ -183,15 +185,17 @@ namespace Celeste.Mod.Portaline {
         return;
       }
 
-      foreach (EmancipationGrill entity in self.Scene.Tracker.GetEntities<EmancipationGrill>())
+      foreach (PortalBlocker entity in self.Scene.Tracker.GetEntities<PortalBlocker>())
 			{
-				if (self.CollideCheck(entity) && (bluePortal != null || orangePortal != null))
+				if (self.CollideCheck(entity))
 				{
-          Audio.Play("event:/sneezingcactus/portal_remove");
-          bluePortal?.Kill();
-          orangePortal?.Kill();
-          bluePortal = null;
-          orangePortal = null;
+          if (bluePortal != null || orangePortal != null) {
+            Audio.Play("event:/sneezingcactus/portal_remove");
+            bluePortal?.Kill();
+            orangePortal?.Kill();
+            bluePortal = null;
+            orangePortal = null;
+          }
           return;
 				}
 			}
@@ -218,7 +222,7 @@ namespace Celeste.Mod.Portaline {
     }
 
     private void PlayerCollideH(On.Celeste.Player.orig_OnCollideH orig, Player self, CollisionData data) {
-      if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) {
+      if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) {
         orig(self, data);
         return;
       }
@@ -234,7 +238,7 @@ namespace Celeste.Mod.Portaline {
     }
 
     private void PlayerCollideV(On.Celeste.Player.orig_OnCollideV orig, Player self, CollisionData data) {
-      if (!(Settings.PortalGunEnabled || Session.PortalGunEnabled)) {
+      if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) {
         orig(self, data);
         return;
       }

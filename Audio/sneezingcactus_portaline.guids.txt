@@ -685,6 +685,11 @@
 {4c875fde-bab4-4ddf-a32b-1a098a44e2a1} event:/new_content/ui/rename_entry_accept_locked
 {b3639ef6-f73d-4ae0-a8c7-8edb94279868} event:/new_content/ui/skip_all
 {7d16c138-146a-4337-97b7-777ec6146448} event:/new_content/timeline_bubble_to_remembered
+{39329b1e-7398-4bf4-bb2e-751ffe969cc7} event:/sneezingcactus/portal_remove
+{77c5ac69-071b-47be-ae22-6588617710b4} event:/sneezingcactus/portal_shoot_blue
+{430d7777-ce6c-4c25-a774-bb45435b790c} event:/sneezingcactus/portal_shoot_orange
+{2ec4ed38-41a9-4f94-a50c-916fbc48f857} event:/sneezingcactus/portalgun_activation
+{f14d4423-9365-43bc-8853-2fafa0d91fb1} event:/sneezingcactus/portal_travel
 {b5fd173e-9a58-4412-9be1-094108b82157} event:/state/cafe_computer_active
 {d85a0635-cbcf-4ba3-8466-b6e24aa45894} event:/state/underwater
 {c4d2289a-859e-42e9-ba38-eee1791a3a62} event:/ui/game/chatoptions_appear
@@ -812,10 +817,6 @@
 {ca8ffe65-72eb-4fb3-9c3d-27fef47bc3d1} event:/ui/world_map/whoosh/700ms_forward
 {2dca99b6-dcf5-40e6-8cd1-c72f97d364cd} event:/ui/world_map/whoosh/900ms_back
 {21a98c43-8e79-4b8a-8963-a269735f3989} event:/ui/world_map/whoosh/900ms_forward
-{77c5ac69-071b-47be-ae22-6588617710b4} event:/sneezingcactus/portal_shoot_blue
-{430d7777-ce6c-4c25-a774-bb45435b790c} event:/sneezingcactus/portal_shoot_orange
-{f14d4423-9365-43bc-8853-2fafa0d91fb1} event:/sneezingcactus/portal_travel
-{39329b1e-7398-4bf4-bb2e-751ffe969cc7} event:/sneezingcactus/portal_remove
 {ea595d6d-cb07-4897-81cb-4830bf5823cb} event:/!!!_README_FIRST
 {c7aad72f-9796-42d3-980b-d093fd765716} bus:/
 {aac396d1-a63f-418a-810a-5d5a59fb2c43} bus:/gameplay_sfx
@@ -1000,6 +1001,6 @@
 {e85b3c9e-428d-41b7-82c0-37814f3cbf15} bank:/dlc_sfx
 {7916fdbf-1253-451d-a369-6dfd34341e4e} bank:/music
 {98263171-3ea2-482b-abb7-9af01e4c002a} bank:/sfx
+{fad83b01-53b9-4755-9635-517aefa14f21} bank:/sneezingcactus_portaline
 {f0efde81-92ec-4f1a-8b48-815f4d8a3255} bank:/ui
 {f42d1384-f9ea-4ba4-9e08-a4d067c55b3b} bank:/Master Bank
-{fad83b01-53b9-4755-9635-517aefa14f21} bank:/sneezingcactus_portaline

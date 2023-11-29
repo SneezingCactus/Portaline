@@ -44,7 +44,7 @@ public class PortalBullet : Actor {
       Kill();
     }
 
-    foreach (EmancipationGrill entity in Scene.Tracker.GetEntities<EmancipationGrill>())
+    foreach (PortalBlocker entity in Scene.Tracker.GetEntities<PortalBlocker>())
     {
       if (CollideCheck(entity))
       {

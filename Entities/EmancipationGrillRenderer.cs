@@ -34,8 +34,11 @@ public class EmancipationGrillRenderer : Entity
   {
     foreach (EmancipationGrill grill in list)
     {
-      if (grill.Visible)
-      {
+      if (!grill.Visible) continue;
+
+      if (grill.horizontal) {
+        Draw.Rect(grill.X, grill.Y + 1, grill.Width, grill.Height - 2, theColor);
+      } else {
         Draw.Rect(grill.X + 1, grill.Y, grill.Width - 2, grill.Height, theColor);
       }
     }
@@ -46,10 +49,9 @@ public class EmancipationGrillRenderer : Entity
     if (list.Count <= 0) return;
     foreach (EmancipationGrill grill in list)
     {
-      if (grill.Visible)
-      {
-        Draw.Rect(grill.Collider, theColor * 0.5f);
-      }
+      if (!grill.Visible) continue;
+
+      Draw.Rect(grill.Collider, theColor * 0.5f);
     }
   }
 }

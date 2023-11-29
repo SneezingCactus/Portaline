@@ -25,13 +25,6 @@ public class UnportalableBlock : Solid {
 
   public UnportalableBlock(Vector2 position, float width, float height, char tileType) : base(position, width, height, safe: true)
 	{
-		/*
-		int newSeed = Calc.Random.Next();
-		Calc.PushRandom(newSeed);
-		Add(Tiles = GFX.FGAutotiler.GenerateBox(tileType, (int)width / 8, (int)height / 8).TileGrid);
-		Calc.PopRandom();
-		Add(new LightOcclude());
-		Add(new TileInterceptor(Tiles, highPriority: false));*/
 		Add(new LightOcclude());
 		SurfaceSoundIndex = SurfaceIndex.TileToIndex[tileType];
 		this.tileType = tileType;
@@ -41,16 +34,6 @@ public class UnportalableBlock : Solid {
 
 	public override void Awake(Scene scene)
 	{
-		//IL_0050: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0055: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0069: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00de: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0111: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0126: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0204: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0209: Unknown result type (might be due to invalid IL or missing references)
 		base.Awake(scene);
 		if (!HasGroup)
 		{
@@ -89,11 +72,6 @@ public class UnportalableBlock : Solid {
 
 	private void AddToGroupAndFindChildren(UnportalableBlock from)
 	{
-		//IL_00c5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0100: Unknown result type (might be due to invalid IL or missing references)
-		//IL_016e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0220: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0254: Unknown result type (might be due to invalid IL or missing references)
 		if (from.X < GroupBoundsMin.X)
 		{
 			GroupBoundsMin.X = (int)from.X;

@@ -157,15 +157,18 @@ public class PortalEntity : Entity {
       Rectangle frontLeft = RectFromVectors(new Vector2(2, -4).Rotate(oriRotation), new Vector2(3, 8).Rotate(oriRotation));
       Rectangle frontRight = RectFromVectors(new Vector2(2, 4).Rotate(oriRotation), new Vector2(3, 8).Rotate(oriRotation));
 
-      Solid frontLeftSolid = scene.CollideFirst<Solid>(frontLeft);
-      Solid frontRightSolid = scene.CollideFirst<Solid>(frontRight);
+      Entity frontLeftBlocker = scene.CollideFirst<Solid>(frontLeft);
+      Entity frontRightBlocker = scene.CollideFirst<Solid>(frontRight);
 
-      if (frontLeftSolid == null && frontRightSolid == null) {
+      if (frontLeftBlocker == null) frontLeftBlocker = scene.CollideFirst<PortalBlocker>(frontLeft);
+      if (frontRightBlocker == null) frontRightBlocker = scene.CollideFirst<PortalBlocker>(frontRight);
+
+      if (frontLeftBlocker == null && frontRightBlocker == null) {
         noObstruction = true;
-      } else if (frontLeftSolid != null && frontRightSolid != null) {
+      } else if (frontLeftBlocker != null && frontRightBlocker != null) {
         Kill();
         return false;
-      } else if (frontLeftSolid != null) {
+      } else if (frontLeftBlocker != null) {
         Position += new Vector2(0, 1).Rotate(oriRotation);
       } else {
         Position -= new Vector2(0, 1).Rotate(oriRotation);

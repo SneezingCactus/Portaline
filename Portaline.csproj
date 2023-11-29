@@ -33,7 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Loenn\triggers\" />
+      <Folder Include="Loenn\entities\" />
     </ItemGroup>
 
     <Choose>
