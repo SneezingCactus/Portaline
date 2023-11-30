@@ -58,7 +58,7 @@ public class PortalBullet : Actor {
 
   public override void Render()
   {
-    if (owner != null) {
+    if (owner.Scene != null) {
       (owner.Scene as Level).Particles.Emit(ParticleTypes.SparkyDust, Position, isOrangePortal ? Color.Orange : Color.Aqua);
     }
     base.Render();

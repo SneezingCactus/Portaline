@@ -6,6 +6,7 @@ using Celeste;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using MonoMod.Utils;
+using Celeste.Mod.Portaline;
 using static Celeste.Mod.Portaline.PortalineModule;
 
 [CustomEntity("Portaline/PortalEntity")]
@@ -25,11 +26,9 @@ public class PortalEntity : Entity {
       switch (orientation) {
         case 0: finalPos.X += 8; break;
         case 1: finalPos.X -= 8; break;
-        case 2: finalPos.Y += 12; break;
-        case 3: finalPos.Y -= 8; break;
+        case 2: finalPos.Y += 10; break;
+        case 3: finalPos.Y -= 10; break;
       }
-
-      finalPos.Y += 4;
 
       return finalPos;
     }
@@ -91,6 +90,8 @@ public class PortalEntity : Entity {
         }
       }
 
+      bool isPlayerInverted = GravityHelperImports.IsPlayerInverted?.Invoke() ?? false;
+
       // this portal has top-bottom orientation and the other portal has left-right orientation
       if (orientation > 1 && opposingPortal.orientation < 2) {
         if ((opposingPortal.orientation == 0 && orientation == 3) ||
@@ -102,6 +103,11 @@ public class PortalEntity : Entity {
           player.DashDir = player.DashDir.Rotate((float)Math.PI / 2);
         }
         player.Facing = player.Speed.X >= 0 ? Facings.Right : Facings.Left;
+
+        if (isPlayerInverted) {
+          player.Speed *= -1;
+          player.DashDir *= -1;
+        }
       }
 
       // this portal has left-right orientation and the other portal has top-bottom orientation
@@ -115,13 +121,18 @@ public class PortalEntity : Entity {
           player.DashDir = player.DashDir.Rotate((float)Math.PI / 2);
         }
         player.Facing = player.Speed.X >= 0 ? Facings.Right : Facings.Left;
+
+        if (isPlayerInverted) {
+          player.Speed *= -1;
+          player.DashDir *= -1;
+        }
       }
 
       // this is to prevent auto jump thing when entering a top portal that leads to another top portal
       DynamicData.For(player).Set("varJumpTimer", 0f);
 
       // change player position to portal
-      player.Position = opposingPortal.TpPosition;
+      player.Center = opposingPortal.TpPosition;
 
       Audio.Play("event:/sneezingcactus/portal_travel");
 

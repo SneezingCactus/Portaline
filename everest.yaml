@@ -1,6 +1,9 @@
-- Name: Portaline
-  Version: 2.0.0
-  DLL: bin/Portaline.dll
+- DLL: bin/Portaline.dll
+  Name: Portaline
+  Version: 2.0.1
   Dependencies:
     - Name: Everest
       Version: 1.3471.0
+  OptionalDependencies:
+    - Name: GravityHelper
+      Version: 1.1.50

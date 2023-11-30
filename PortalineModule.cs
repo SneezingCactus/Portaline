@@ -4,8 +4,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Monocle;
+using MonoMod.ModInterop;
 
 namespace Celeste.Mod.Portaline {
+  [ModImportName("GravityHelper")]
+  public static class GravityHelperImports {
+    public static Func<bool> IsPlayerInverted;
+  }
+
   public class PortalineModule : EverestModule {
     public static PortalineModule Instance { get; private set; }
 
@@ -51,6 +57,8 @@ namespace Celeste.Mod.Portaline {
     }
 
     public override void Load() {
+      typeof(GravityHelperImports).ModInterop();
+
       On.Celeste.Player.Render += PlayerRender;
       On.Celeste.Player.Update += PlayerUpdate;
       On.Celeste.Player.OnCollideH += PlayerCollideH;

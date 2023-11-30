@@ -1,8 +1,8 @@
-entities.Portaline/UnportalableBlock.placements.name.unportalable_block=Unportalable Block (Portaline)
-entities.Portaline/EmancipationGrillHorizontal.placements.name.emancipation_grill_horizontal=Emancipation Grill (Horizontal) (Portaline)
-entities.Portaline/EmancipationGrillVertical.placements.name.emancipation_grill_vertical=Emancipation Grill (Vertical) (Portaline)
-entities.Portaline/PortalGunGiverHorizontal.placements.name.portal_gun_giver_horizontal=Portal Gun Giver (Horizontal) (Portaline)
-entities.Portaline/PortalGunGiverVertical.placements.name.portal_gun_giver_vertical=Portal Gun Giver (Vertical) (Portaline)
+entities.Portaline/UnportalableBlock.placements.name.unportalable_block=Unportalable Block
+entities.Portaline/EmancipationGrillHorizontal.placements.name.emancipation_grill_horizontal=Emancipation Grill (Horizontal)
+entities.Portaline/EmancipationGrillVertical.placements.name.emancipation_grill_vertical=Emancipation Grill (Vertical)
+entities.Portaline/PortalGunGiverHorizontal.placements.name.portal_gun_giver_horizontal=Portal Gun Giver (Horizontal)
+entities.Portaline/PortalGunGiverVertical.placements.name.portal_gun_giver_vertical=Portal Gun Giver (Vertical)
 
 entities.Portaline/PortalGunGiverHorizontal.attributes.name.enableGun=Give Gun?
 entities.Portaline/PortalGunGiverHorizontal.attributes.description.enableGun=If set to true, the barrier will be coloured green and it will enable the portal gun upon crossing the barrier; if set to false, the barrier will be coloured red and it will disable the portal gun instead.
