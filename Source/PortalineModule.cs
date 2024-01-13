@@ -47,8 +47,7 @@ public class PortalineModule : EverestModule {
     Instance = this;
   }
 
-  [Obsolete]
-  public override void LoadContent() {
+  public override void LoadContent(bool firstLoad) {
     aimTex = GFX.Game["Portaline/AimIndicator"].Texture.Texture;
     aimTexBlue = GFX.Game["Portaline/AimIndicatorBlue"].Texture.Texture;
     aimTexOrange = GFX.Game["Portaline/AimIndicatorOrange"].Texture.Texture;
