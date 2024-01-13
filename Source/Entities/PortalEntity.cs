@@ -170,8 +170,8 @@ public class PortalEntity : Entity {
       Entity frontLeftBlocker = scene.CollideFirst<Solid>(frontLeft);
       Entity frontRightBlocker = scene.CollideFirst<Solid>(frontRight);
 
-      if (frontLeftBlocker == null) frontLeftBlocker = scene.CollideFirst<PortalBlocker>(frontLeft);
-      if (frontRightBlocker == null) frontRightBlocker = scene.CollideFirst<PortalBlocker>(frontRight);
+      frontLeftBlocker ??= scene.CollideFirst<PortalBlocker>(frontLeft);
+      frontRightBlocker ??= scene.CollideFirst<PortalBlocker>(frontRight);
 
       if (frontLeftBlocker == null && frontRightBlocker == null) {
         noObstruction = true;
