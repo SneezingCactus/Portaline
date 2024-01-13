@@ -1,9 +1,10 @@
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.Entities;
-using Celeste;
 using System;
 using static Celeste.Mod.Portaline.PortalineModule;
+
+namespace Celeste.Mod.Portaline;
 
 [CustomEntity("Portaline/PortalBullet")]
 public class PortalBullet : Actor {
@@ -11,9 +12,9 @@ public class PortalBullet : Actor {
   private Vector2 velocity;
   private readonly Actor owner;
   private bool dead = false;
-  
+
   private readonly Collision onCollideH;
-	private readonly Collision onCollideV;
+  private readonly Collision onCollideV;
 
 
   public PortalBullet(Vector2 position, Vector2 velocity, bool isOrangePortal, Actor owner) : base(position) {
@@ -23,7 +24,7 @@ public class PortalBullet : Actor {
     this.owner = owner;
 
     Depth = 100;
-		Collider = new Hitbox(4f, 4f, -2f, -2f);
+    Collider = new Hitbox(4f, 4f, -2f, -2f);
 
     onCollideH += OnCollideH;
     onCollideV += OnCollideV;
@@ -31,8 +32,7 @@ public class PortalBullet : Actor {
     (owner.Scene as Level).Add(this);
   }
 
-  public override void Update()
-  {
+  public override void Update() {
     if (dead) return;
 
     MoveH(velocity.X, onCollideH);
@@ -44,10 +44,8 @@ public class PortalBullet : Actor {
       Kill();
     }
 
-    foreach (PortalBlocker entity in Scene.Tracker.GetEntities<PortalBlocker>())
-    {
-      if (CollideCheck(entity))
-      {
+    foreach (PortalBlocker entity in Scene.Tracker.GetEntities<PortalBlocker>()) {
+      if (CollideCheck(entity)) {
         Kill();
         break;
       }
@@ -56,8 +54,7 @@ public class PortalBullet : Actor {
     base.Update();
   }
 
-  public override void Render()
-  {
+  public override void Render() {
     if (owner.Scene != null) {
       (owner.Scene as Level).Particles.Emit(ParticleTypes.SparkyDust, Position, isOrangePortal ? Color.Orange : Color.Aqua);
     }
@@ -78,7 +75,7 @@ public class PortalBullet : Actor {
       Kill();
       return;
     }
-    
+
     int orientation;
 
     if (Math.Abs(data.Direction.X) > Math.Abs(data.Direction.Y)) {

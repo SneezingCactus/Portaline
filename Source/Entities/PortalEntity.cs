@@ -1,13 +1,12 @@
-
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.Entities;
-using Celeste;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using MonoMod.Utils;
-using Celeste.Mod.Portaline;
 using static Celeste.Mod.Portaline.PortalineModule;
+
+namespace Celeste.Mod.Portaline;
 
 [CustomEntity("Portaline/PortalEntity")]
 public class PortalEntity : Entity {
@@ -171,8 +170,8 @@ public class PortalEntity : Entity {
       Entity frontLeftBlocker = scene.CollideFirst<Solid>(frontLeft);
       Entity frontRightBlocker = scene.CollideFirst<Solid>(frontRight);
 
-      if (frontLeftBlocker == null) frontLeftBlocker = scene.CollideFirst<PortalBlocker>(frontLeft);
-      if (frontRightBlocker == null) frontRightBlocker = scene.CollideFirst<PortalBlocker>(frontRight);
+      frontLeftBlocker ??= scene.CollideFirst<PortalBlocker>(frontLeft);
+      frontRightBlocker ??= scene.CollideFirst<PortalBlocker>(frontRight);
 
       if (frontLeftBlocker == null && frontRightBlocker == null) {
         noObstruction = true;
@@ -224,40 +223,35 @@ public class PortalEntity : Entity {
     );
   }
 
-  public bool HighPriorityUpdate(Player executer)
-  {
+  public bool HighPriorityUpdate(Player executer) {
     return this?.CollisionCheck(executer) ?? false;
   }
 
-  public override void Update()
-  {
+  public override void Update() {
     base.Update();
 
     if (!dead) {
       if (owner != null) Position += owner.Position - oldOwnerPos;
       oldOwnerPos = owner.Position;
       CollisionCheck(null);
-    }    
+    }
 
     if (dead && Scene != null) {
       RemoveSelf();
     }
   }
 
-  public override void Removed(Scene scene)
-  {
+  public override void Removed(Scene scene) {
     base.Removed(scene);
     Kill();
   }
 
-  public override void SceneEnd(Scene scene)
-  {
+  public override void SceneEnd(Scene scene) {
     base.SceneEnd(scene);
     Kill();
   }
 
-  public override void Render()
-  {
+  public override void Render() {
     base.Render();
 
     if (dead) return;
