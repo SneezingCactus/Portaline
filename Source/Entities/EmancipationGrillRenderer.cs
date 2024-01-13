@@ -8,7 +8,7 @@ namespace Celeste.Mod.Portaline;
 [Tracked]
 [CustomEntity("Portaline/EmancipationGrillRenderer")]
 public class EmancipationGrillRenderer : Entity {
-  private List<EmancipationGrill> list = new List<EmancipationGrill>();
+  private readonly List<EmancipationGrill> list = [];
 
   private Color theColor = Color.DeepSkyBlue * 0.5f;
 

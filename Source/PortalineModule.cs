@@ -9,7 +9,10 @@ namespace Celeste.Mod.Portaline;
 
 [ModImportName("GravityHelper")]
 public static class GravityHelperImports {
+  // this is a mod import, monomod will assign to it, and (probably) needs to be visible
+#pragma warning disable CA2211 // Non-constant fields should not be visible
   public static Func<bool> IsPlayerInverted;
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 }
 
 public class PortalineModule : EverestModule {
@@ -19,6 +22,7 @@ public class PortalineModule : EverestModule {
   public static PortalineModuleSettings Settings => (PortalineModuleSettings)Instance._Settings;
 
   private static MouseState State => Mouse.GetState();
+  private static Vector2 MouseCursorPos => Vector2.Transform(new Vector2(State.X, State.Y), Matrix.Invert(Engine.ScreenMatrix));
 
   private Texture2D aimTex;
   private Texture2D aimTexBlue;
@@ -35,7 +39,6 @@ public class PortalineModule : EverestModule {
 
   private VirtualJoystick joystickAim;
   private Vector2 oldJoystickAim;
-  private Vector2 MouseCursorPos => Vector2.Transform(new Vector2(State.X, State.Y), Matrix.Invert(Engine.ScreenMatrix));
   private Vector2 oldMouseCursorPos = Vector2.Zero;
   private Vector2 CursorPos = Vector2.Zero;
   private bool usingJoystickAim = false;
@@ -159,6 +162,9 @@ public class PortalineModule : EverestModule {
   private void PlayerUpdate(On.Celeste.Player.orig_Update orig, Player self) {
     orig(self);
 
+    // "entity" is always of type PortalGunGiver, and can't fail at runtime
+    // celeste devs just didn't make GetEntities<T> a List<T> for some reason
+#pragma warning disable IDE0220 // Add explicit cast
     foreach (PortalGunGiver entity in self.Scene.Tracker.GetEntities<PortalGunGiver>()) {
       if (self.CollideCheck(entity)) {
         if (entity.enable && !Instance.gunEnabledInLevel) {
@@ -167,6 +173,7 @@ public class PortalineModule : EverestModule {
         Instance.gunEnabledInLevel = entity.enable;
       }
     }
+#pragma warning restore IDE0220 // Add explicit cast
 
     if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
 
@@ -192,6 +199,9 @@ public class PortalineModule : EverestModule {
       return;
     }
 
+    // "entity" is always of type PortalBlocker, and can't fail at runtime
+    // celeste devs just didn't make GetEntities<T> a List<T> for some reason
+#pragma warning disable IDE0220 // Add explicit cast
     foreach (PortalBlocker entity in self.Scene.Tracker.GetEntities<PortalBlocker>()) {
       if (self.CollideCheck(entity)) {
         if (bluePortal != null || orangePortal != null) {
@@ -204,6 +214,7 @@ public class PortalineModule : EverestModule {
         return;
       }
     }
+#pragma warning restore IDE0220
 
     if (Settings.RemovePortals.Pressed) {
       Audio.Play("event:/sneezingcactus/portal_remove");
@@ -212,6 +223,9 @@ public class PortalineModule : EverestModule {
       bluePortal = null;
       orangePortal = null;
     }
+    // PortalBullet..ctor() adds itself to the scene on creation
+    // so the result is not unused
+#pragma warning disable CA1806 // Do not ignore method results
     if (Settings.ShootBluePortal.Pressed || MInput.Mouse.PressedLeftButton) {
       self.Facing = (Facings)Math.Sign(ToCursor(self, CursorPos).X);
       if (self.Facing == 0) self.Facing = Facings.Right;
@@ -224,6 +238,7 @@ public class PortalineModule : EverestModule {
       Audio.Play("event:/sneezingcactus/portal_shoot_orange");
       new PortalBullet(self.Center, ToCursor(self, CursorPos) * 15f, true, self);
     }
+#pragma warning restore CA1806 // Do not ignore method results
   }
 
   private void PlayerCollideH(On.Celeste.Player.orig_OnCollideH orig, Player self, CollisionData data) {

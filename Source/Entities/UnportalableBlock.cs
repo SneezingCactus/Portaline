@@ -82,10 +82,17 @@ public class UnportalableBlock : Solid {
     if (from != this) {
       from.master = this;
     }
+    // "entity" is always of type UnportalableBlock, and can't fail at runtime
+    // celeste devs just didn't make GetEntities<T> a List<T> for some reason
+#pragma warning disable IDE0220 // Add explicit cast
     foreach (UnportalableBlock entity in Scene.Tracker.GetEntities<UnportalableBlock>()) {
-      if (!entity.HasGroup && entity.tileType == tileType && (base.Scene.CollideCheck(new Rectangle((int)from.X - 1, (int)from.Y, (int)from.Width + 2, (int)from.Height), entity) || base.Scene.CollideCheck(new Rectangle((int)from.X, (int)from.Y - 1, (int)from.Width, (int)from.Height + 2), entity))) {
+      if (!entity.HasGroup && entity.tileType == tileType && (
+        base.Scene.CollideCheck(new Rectangle((int)from.X - 1, (int)from.Y, (int)from.Width + 2, (int)from.Height), entity)
+        || base.Scene.CollideCheck(new Rectangle((int)from.X, (int)from.Y - 1, (int)from.Width, (int)from.Height + 2), entity)
+      )) {
         AddToGroupAndFindChildren(entity);
       }
     }
+#pragma warning restore IDE0220 // Add explicit cast
   }
 }

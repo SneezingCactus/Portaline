@@ -15,8 +15,8 @@ public class EmancipationGrill : PortalBlocker {
   }
 
   public TileGrid Tiles;
-  private List<GrillParticle> particles = new List<GrillParticle>();
-  private float[] speeds = { 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+  private readonly List<GrillParticle> particles = [];
+  private readonly float[] speeds = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
   public bool horizontal;
 

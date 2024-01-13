@@ -7,6 +7,5 @@ namespace Celeste.Mod.Portaline;
 // empty class used to identify entities that block portals like the emancipation grill
 [Tracked(true)]
 [CustomEntity("Portaline/PortalBlocker")]
-public class PortalBlocker : Entity {
-  public PortalBlocker(Vector2 position) : base(position) { }
+public class PortalBlocker(Vector2 position) : Entity(position) {
 }
