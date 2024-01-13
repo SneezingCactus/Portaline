@@ -224,40 +224,35 @@ public class PortalEntity : Entity {
     );
   }
 
-  public bool HighPriorityUpdate(Player executer)
-  {
+  public bool HighPriorityUpdate(Player executer) {
     return this?.CollisionCheck(executer) ?? false;
   }
 
-  public override void Update()
-  {
+  public override void Update() {
     base.Update();
 
     if (!dead) {
       if (owner != null) Position += owner.Position - oldOwnerPos;
       oldOwnerPos = owner.Position;
       CollisionCheck(null);
-    }    
+    }
 
     if (dead && Scene != null) {
       RemoveSelf();
     }
   }
 
-  public override void Removed(Scene scene)
-  {
+  public override void Removed(Scene scene) {
     base.Removed(scene);
     Kill();
   }
 
-  public override void SceneEnd(Scene scene)
-  {
+  public override void SceneEnd(Scene scene) {
     base.SceneEnd(scene);
     Kill();
   }
 
-  public override void Render()
-  {
+  public override void Render() {
     base.Render();
 
     if (dead) return;

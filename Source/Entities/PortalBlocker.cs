@@ -6,5 +6,5 @@ using Monocle;
 [Tracked(true)]
 [CustomEntity("Portaline/PortalBlocker")]
 public class PortalBlocker : Entity {
-  public PortalBlocker(Vector2 position) : base(position) {}
+  public PortalBlocker(Vector2 position) : base(position) { }
 }

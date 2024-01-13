@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using static Celeste.Mod.Portaline.PortalineModule;
 
-namespace Celeste.Mod.Portaline
-{
+namespace Celeste.Mod.Portaline {
   [Tracked(true)]
   [CustomEntity("Portaline/PortalGunGiver")]
   public class PortalGunGiver : PortalBlocker {
@@ -23,8 +22,7 @@ namespace Celeste.Mod.Portaline
     public bool enable;
     public bool horizontal;
 
-    public PortalGunGiver(Vector2 position, float width, float height, bool enable) : base(position)
-    {
+    public PortalGunGiver(Vector2 position, float width, float height, bool enable) : base(position) {
       this.enable = enable;
       color = enable ? new Color(0x00, 0xff, 0x1b) : new Color(0xff, 0x51, 0x51);
 
@@ -38,22 +36,21 @@ namespace Celeste.Mod.Portaline
 
     public PortalGunGiver(EntityData data, Vector2 offset) : this(data.Position + offset, data.Width, data.Height, data.Bool("enableGun", true)) { }
 
-    public override void Awake(Scene scene)
-    {
+    public override void Awake(Scene scene) {
       base.Awake(scene);
 
       particles.Clear();
 
       if (horizontal) {
         for (int i = 0; i < Width * Height / 16f; i++) {
-          particles.Add(new GrillParticle{
+          particles.Add(new GrillParticle {
             position = new Vector2(Calc.Random.NextFloat(Width - 1f), Calc.Random.NextFloat(Height - 3f) + 1),
             orientation = 1,
           });
         }
       } else {
         for (int i = 0; i < Width * Height / 16f; i++) {
-          particles.Add(new GrillParticle{
+          particles.Add(new GrillParticle {
             position = new Vector2(Calc.Random.NextFloat(Width - 3f) + 1, Calc.Random.NextFloat(Height - 1f)),
             orientation = 1,
           });
@@ -61,8 +58,7 @@ namespace Celeste.Mod.Portaline
       }
     }
 
-    public override void Update()
-    {
+    public override void Update() {
       base.Update();
 
       int num = speeds.Length;
@@ -90,8 +86,7 @@ namespace Celeste.Mod.Portaline
       }
     }
 
-    public override void Render()
-    {
+    public override void Render() {
       base.Render();
 
       if (horizontal) {

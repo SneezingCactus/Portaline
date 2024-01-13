@@ -41,5 +41,13 @@
     <PropertyGroup>
         <PathMap>$(MSBuildProjectDirectory)=Portaline/</PathMap>
     </PropertyGroup>
+    
+    <ItemGroup>
+      <EditorConfigFiles Remove="E:\SteamLibrary\steamapps\common\Celeste\Mods\Portaline\Source\.editorconfig" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Include="E:\SteamLibrary\steamapps\common\Celeste\Mods\Portaline\Source\.editorconfig" />
+    </ItemGroup>
 
 </Project>

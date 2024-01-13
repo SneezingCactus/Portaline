@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,7 +15,7 @@ namespace Celeste.Mod.Portaline {
     public static PortalineModule Instance { get; private set; }
 
     public override Type SettingsType => typeof(PortalineModuleSettings);
-    public static PortalineModuleSettings Settings => (PortalineModuleSettings) Instance._Settings;
+    public static PortalineModuleSettings Settings => (PortalineModuleSettings)Instance._Settings;
 
     private static MouseState State => Mouse.GetState();
 
@@ -87,7 +87,7 @@ namespace Celeste.Mod.Portaline {
       base.OnInputDeregister();
       joystickAim?.Deregister();
     }
-    
+
     private void LevelBegin(On.Celeste.Level.orig_LoadLevel orig, Level self, Player.IntroTypes playerIntro, bool isFromLoader) {
       self.Add(new EmancipationGrillRenderer());
       gunEnabledInLevel = false;
@@ -128,7 +128,7 @@ namespace Celeste.Mod.Portaline {
     private void PlayerRender(On.Celeste.Player.orig_Render orig, Player self) {
       orig(self);
 
-     if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
+      if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
 
       Vector2 gunVector = ToCursor(self, CursorPos);
 
@@ -158,8 +158,7 @@ namespace Celeste.Mod.Portaline {
     private void PlayerUpdate(On.Celeste.Player.orig_Update orig, Player self) {
       orig(self);
 
-      foreach (PortalGunGiver entity in self.Scene.Tracker.GetEntities<PortalGunGiver>())
-			{
+      foreach (PortalGunGiver entity in self.Scene.Tracker.GetEntities<PortalGunGiver>()) {
         if (self.CollideCheck(entity)) {
           if (entity.enable && !Instance.gunEnabledInLevel) {
             Audio.Play("event:/sneezingcactus/portalgun_activation");
@@ -192,10 +191,8 @@ namespace Celeste.Mod.Portaline {
         return;
       }
 
-      foreach (PortalBlocker entity in self.Scene.Tracker.GetEntities<PortalBlocker>())
-			{
-				if (self.CollideCheck(entity))
-				{
+      foreach (PortalBlocker entity in self.Scene.Tracker.GetEntities<PortalBlocker>()) {
+        if (self.CollideCheck(entity)) {
           if (bluePortal != null || orangePortal != null) {
             Audio.Play("event:/sneezingcactus/portal_remove");
             bluePortal?.Kill();
@@ -204,9 +201,9 @@ namespace Celeste.Mod.Portaline {
             orangePortal = null;
           }
           return;
-				}
-			}
-      
+        }
+      }
+
       if (Settings.RemovePortals.Pressed) {
         Audio.Play("event:/sneezingcactus/portal_remove");
         bluePortal?.Kill();
@@ -240,7 +237,7 @@ namespace Celeste.Mod.Portaline {
       changedMe = (Instance.orangePortal?.HighPriorityUpdate(self) ?? false) || changedMe;
 
       if (changedMe) return;
-      
+
       orig(self, data);
     }
 
@@ -256,7 +253,7 @@ namespace Celeste.Mod.Portaline {
       changedMe = (Instance.orangePortal?.HighPriorityUpdate(self) ?? false) || changedMe;
 
       if (changedMe) return;
-      
+
       orig(self, data);
     }
 
