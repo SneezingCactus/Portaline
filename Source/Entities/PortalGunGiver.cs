@@ -4,20 +4,16 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using static Celeste.Mod.Portaline.PortalineModule;
+using static Celeste.Mod.Portaline.EmancipationGrill;
 
 namespace Celeste.Mod.Portaline;
 
 [Tracked(true)]
 [CustomEntity("Portaline/PortalGunGiver")]
 public class PortalGunGiver : PortalBlocker {
-  struct GrillParticle {
-    public Vector2 position;
-    public int orientation;
-  }
 
   public TileGrid Tiles;
-  private List<GrillParticle> particles = new List<GrillParticle>();
-  private float[] speeds = { 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+  private readonly List<GrillParticle> particles = [];
   private Color color;
 
   public bool enable;
@@ -62,13 +58,13 @@ public class PortalGunGiver : PortalBlocker {
   public override void Update() {
     base.Update();
 
-    int num = speeds.Length;
+    int num = GrillParticle.speeds.Count;
     int i = 0;
     if (horizontal) {
       for (int count = particles.Count; i < count; i++) {
         GrillParticle particle = particles[i];
 
-        Vector2 value = particle.position + Vector2.UnitX * speeds[i % num] * particle.orientation * Engine.DeltaTime;
+        Vector2 value = particle.position + Vector2.UnitX * GrillParticle.speeds[i % num] * particle.orientation * Engine.DeltaTime;
         if (value.X >= Width || value.X <= 0) particle.orientation *= -1;
         particle.position = value;
 
@@ -78,7 +74,7 @@ public class PortalGunGiver : PortalBlocker {
       for (int count = particles.Count; i < count; i++) {
         GrillParticle particle = particles[i];
 
-        Vector2 value = particle.position + Vector2.UnitY * speeds[i % num] * particle.orientation * Engine.DeltaTime;
+        Vector2 value = particle.position + Vector2.UnitY * GrillParticle.speeds[i % num] * particle.orientation * Engine.DeltaTime;
         if (value.Y >= Height || value.Y <= 0) particle.orientation *= -1;
         particle.position = value;
 

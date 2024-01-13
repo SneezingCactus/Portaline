@@ -4,19 +4,22 @@ using Celeste.Mod.Entities;
 using System.Collections.Generic;
 using System;
 using static Celeste.Mod.Portaline.PortalineModule;
+using System.Linq;
 
 namespace Celeste.Mod.Portaline;
 
 [CustomEntity("Portaline/EmancipationGrill")]
 public class EmancipationGrill : PortalBlocker {
-  struct GrillParticle {
+  public struct GrillParticle {
     public Vector2 position;
     public int orientation;
+
+    // don't let anyone accidentally modify the particle speeds by using an IReadOnlyList<float>
+    public static readonly IReadOnlyList<float> speeds = Enumerable.Range(4, 10).Cast<float>().ToList();
   }
 
   public TileGrid Tiles;
   private readonly List<GrillParticle> particles = [];
-  private readonly float[] speeds = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
   public bool horizontal;
 
@@ -56,13 +59,13 @@ public class EmancipationGrill : PortalBlocker {
   public override void Update() {
     base.Update();
 
-    int num = speeds.Length;
+    int num = GrillParticle.speeds.Count;
     int i = 0;
     if (horizontal) {
       for (int count = particles.Count; i < count; i++) {
         GrillParticle particle = particles[i];
 
-        Vector2 value = particle.position + Vector2.UnitX * speeds[i % num] * particle.orientation * Engine.DeltaTime;
+        Vector2 value = particle.position + Vector2.UnitX * GrillParticle.speeds[i % num] * particle.orientation * Engine.DeltaTime;
         if (value.X >= Width || value.X <= 0) particle.orientation *= -1;
         particle.position = value;
 
@@ -72,7 +75,7 @@ public class EmancipationGrill : PortalBlocker {
       for (int count = particles.Count; i < count; i++) {
         GrillParticle particle = particles[i];
 
-        Vector2 value = particle.position + Vector2.UnitY * speeds[i % num] * particle.orientation * Engine.DeltaTime;
+        Vector2 value = particle.position + Vector2.UnitY * GrillParticle.speeds[i % num] * particle.orientation * Engine.DeltaTime;
         if (value.Y >= Height || value.Y <= 0) particle.orientation *= -1;
         particle.position = value;
 
