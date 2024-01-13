@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;

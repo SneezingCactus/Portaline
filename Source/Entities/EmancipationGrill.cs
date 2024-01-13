@@ -3,9 +3,7 @@ using Microsoft.Xna.Framework;
 using Celeste.Mod.Entities;
 using Celeste;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using System;
-using System.Xml.Schema;
 using static Celeste.Mod.Portaline.PortalineModule;
 
 [CustomEntity("Portaline/EmancipationGrill")]
