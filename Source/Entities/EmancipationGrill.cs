@@ -4,7 +4,6 @@ using Celeste.Mod.Entities;
 using Celeste;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using IL.YYProject.XXHash;
 using System;
 using System.Xml.Schema;
 using static Celeste.Mod.Portaline.PortalineModule;
