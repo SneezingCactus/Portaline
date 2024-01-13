@@ -2,10 +2,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Celeste.Mod.Portaline;
 
-[SettingName("Portaline Settings")]
+[SettingName("PORTALINE_SETTINGS_TITLE")]
 public class PortalineModuleSettings : EverestModuleSettings {
-  [SettingName("Portal Gun Override Enable")]
-  [SettingSubText("By default, the portal gun is disabled upon spawning. If you set this to ON, the portal gun will always be enabled. \n\nNote: In addition to the keyboard and joystick settings below,\nyou can also shoot blue portals with the left mouse button,\nand orange portals with the right mouse button.")]
+  [SettingName("PORTALINE_SETTINGS_OVERRIDE")]
+  [SettingSubText("PORTALINE_SETTINGS_OVERRIDE_HINT")]
   public bool PortalGunOverrideEnable { get; set; } = false;
 
   [DefaultButtonBinding(Buttons.LeftShoulder, Keys.O)]
