@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
-using Celeste;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
+
+namespace Celeste.Mod.Portaline;
 
 [Tracked]
 [CustomEntity("Portaline/EmancipationGrillRenderer")]

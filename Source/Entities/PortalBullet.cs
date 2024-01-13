@@ -1,9 +1,10 @@
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.Entities;
-using Celeste;
 using System;
 using static Celeste.Mod.Portaline.PortalineModule;
+
+namespace Celeste.Mod.Portaline;
 
 [CustomEntity("Portaline/PortalBullet")]
 public class PortalBullet : Actor {

@@ -1,8 +1,9 @@
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.Entities;
-using Celeste;
 using System.Collections.Generic;
+
+namespace Celeste.Mod.Portaline;
 
 [Tracked]
 [CustomEntity("Portaline/UnportalableBlock")]

@@ -1,13 +1,12 @@
-
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.Entities;
-using Celeste;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using MonoMod.Utils;
-using Celeste.Mod.Portaline;
 using static Celeste.Mod.Portaline.PortalineModule;
+
+namespace Celeste.Mod.Portaline;
 
 [CustomEntity("Portaline/PortalEntity")]
 public class PortalEntity : Entity {

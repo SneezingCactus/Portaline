@@ -1,10 +1,11 @@
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.Entities;
-using Celeste;
 using System.Collections.Generic;
 using System;
 using static Celeste.Mod.Portaline.PortalineModule;
+
+namespace Celeste.Mod.Portaline;
 
 [CustomEntity("Portaline/EmancipationGrill")]
 public class EmancipationGrill : PortalBlocker {
