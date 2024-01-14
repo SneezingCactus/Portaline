@@ -15,7 +15,7 @@ public class EmancipationGrill : PortalBlocker {
     public int orientation;
 
     // don't let anyone accidentally modify the particle speeds by using an IReadOnlyList<float>
-    public static readonly IReadOnlyList<float> speeds = Enumerable.Range(4, 10).Cast<float>().ToList();
+    public static readonly IReadOnlyList<float> speeds = Enumerable.Range(4, 10).Select(i => (float)i).ToList();
   }
 
   public TileGrid Tiles;

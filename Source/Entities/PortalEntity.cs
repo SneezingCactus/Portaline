@@ -18,21 +18,6 @@ public class PortalEntity : Entity {
   private Vector2 oldOwnerPos;
   private float scale = 0;
 
-  public Vector2 TpPosition {
-    get {
-      Vector2 finalPos = Position;
-
-      switch (orientation) {
-        case 0: finalPos.X += 8; break;
-        case 1: finalPos.X -= 8; break;
-        case 2: finalPos.Y += 10; break;
-        case 3: finalPos.Y -= 10; break;
-      }
-
-      return finalPos;
-    }
-  }
-
   public Rectangle Hitbox {
     get {
       if (orientation < 2) {
@@ -50,6 +35,22 @@ public class PortalEntity : Entity {
     this.owner = owner;
     oldOwnerPos = owner.Position;
     (owner.Scene as Level).Add(this);
+  }
+
+  public Vector2 getTpPosition(Player player) {
+    Vector2 finalPos = Position;
+
+    switch (orientation) {
+      case 0: finalPos.X += 8; break;
+      case 1: finalPos.X -= 8; break;
+      case 2: finalPos.Y += 10; break;
+      case 3: finalPos.Y -= 10; break;
+    }
+
+    //finalPos.X += MathF.Round(player.Width / 2);
+    finalPos.Y += MathF.Round(player.Height / 2);
+
+    return finalPos;
   }
 
   public bool CollisionCheck(Player executer) {
@@ -131,7 +132,7 @@ public class PortalEntity : Entity {
       DynamicData.For(player).Set("varJumpTimer", 0f);
 
       // change player position to portal
-      player.Center = opposingPortal.TpPosition;
+      player.Position = opposingPortal.getTpPosition(player);
 
       Audio.Play("event:/sneezingcactus/portal_travel");
 
@@ -151,21 +152,21 @@ public class PortalEntity : Entity {
       return false;
     }
 
-    float oriRotation = 0;
+    float orientationAngle = 0;
 
     switch (orientation) {
-      case 0: oriRotation = 0; break;
-      case 1: oriRotation = (float)Math.PI; break;
-      case 2: oriRotation = (float)Math.PI * 0.5f; break;
-      case 3: oriRotation = (float)Math.PI * 1.5f; break;
+      case 0: orientationAngle = 0; break;
+      case 1: orientationAngle = (float)Math.PI; break;
+      case 2: orientationAngle = (float)Math.PI * 0.5f; break;
+      case 3: orientationAngle = (float)Math.PI * 1.5f; break;
     }
 
     for (int i = 0; i < 100; i++) {
       // obstruction (stuff in front of the portal)
-      bool noObstruction = false;
+      bool notObstructed = false;
 
-      Rectangle frontLeft = RectFromVectors(new Vector2(2, -4).Rotate(oriRotation), new Vector2(3, 8).Rotate(oriRotation));
-      Rectangle frontRight = RectFromVectors(new Vector2(2, 4).Rotate(oriRotation), new Vector2(3, 8).Rotate(oriRotation));
+      Rectangle frontLeft = RectFromVectors(new Vector2(2, -4).Rotate(orientationAngle), new Vector2(3, 8).Rotate(orientationAngle));
+      Rectangle frontRight = RectFromVectors(new Vector2(2, 4).Rotate(orientationAngle), new Vector2(3, 8).Rotate(orientationAngle));
 
       Entity frontLeftBlocker = scene.CollideFirst<Solid>(frontLeft);
       Entity frontRightBlocker = scene.CollideFirst<Solid>(frontRight);
@@ -174,37 +175,51 @@ public class PortalEntity : Entity {
       frontRightBlocker ??= scene.CollideFirst<PortalBlocker>(frontRight);
 
       if (frontLeftBlocker == null && frontRightBlocker == null) {
-        noObstruction = true;
+        // if the portal isn't obstructed at all
+        notObstructed = true;
       } else if (frontLeftBlocker != null && frontRightBlocker != null) {
+        // if the portal is completely obstructed
         Kill();
         return false;
       } else if (frontLeftBlocker != null) {
-        Position += new Vector2(0, 1).Rotate(oriRotation);
+        // if the portal is obstructed from the left side
+        Position += new Vector2(0, 1).Rotate(orientationAngle);
       } else {
-        Position -= new Vector2(0, 1).Rotate(oriRotation);
+        // if the portal is obstructed from the right side
+        Position -= new Vector2(0, 1).Rotate(orientationAngle);
       }
 
       // off-surface (portal not being completely sticked to a surface)
-      bool noOffSurface = false;
+      bool notOffSurface = false;
 
-      Rectangle backLeft = RectFromVectors(new Vector2(-2, -8).Rotate(oriRotation), new Vector2(3, 2).Rotate(oriRotation));
-      Rectangle backRight = RectFromVectors(new Vector2(-2, 8).Rotate(oriRotation), new Vector2(3, 2).Rotate(oriRotation));
+      Rectangle backLeft = RectFromVectors(new Vector2(-2, -8).Rotate(orientationAngle), new Vector2(3, 2).Rotate(orientationAngle));
+      Rectangle backCenterLeft = RectFromVectors(new Vector2(-2, -4).Rotate(orientationAngle), new Vector2(3, 2).Rotate(orientationAngle));
+      Rectangle backCenter = RectFromVectors(new Vector2(-2, 0).Rotate(orientationAngle), new Vector2(3, 2).Rotate(orientationAngle));
+      Rectangle backCenterRight = RectFromVectors(new Vector2(-2, 4).Rotate(orientationAngle), new Vector2(3, 2).Rotate(orientationAngle));
+      Rectangle backRight = RectFromVectors(new Vector2(-2, 8).Rotate(orientationAngle), new Vector2(3, 2).Rotate(orientationAngle));
 
       Solid backLeftSolid = scene.CollideFirst<Solid>(backLeft);
+      Solid backCenterLeftSolid = scene.CollideFirst<Solid>(backCenterLeft);
+      Solid backCenterSolid = scene.CollideFirst<Solid>(backCenter);
+      Solid backCenterRightSolid = scene.CollideFirst<Solid>(backCenterRight);
       Solid backRightSolid = scene.CollideFirst<Solid>(backRight);
 
-      if (backLeftSolid != null && backRightSolid != null) {
-        noOffSurface = true;
+      if (backLeftSolid != null && backCenterLeftSolid != null && backCenterSolid != null && backCenterRightSolid != null && backRightSolid != null) {
+        // if the portal is completely sticked to the surface
+        notOffSurface = true;
       } else if (backLeftSolid == null && backRightSolid == null) {
+        // if the portal is completely in the air (or placed on a single tile surface)
         Kill();
         return false;
       } else if (backLeftSolid == null) {
-        Position += new Vector2(0, 1).Rotate(oriRotation);
+        // if the portal is sticked to the surface in the right side, but not the left
+        Position += new Vector2(0, 1).Rotate(orientationAngle);
       } else {
-        Position -= new Vector2(0, 1).Rotate(oriRotation);
+        // if the portal is sticked to the surface in the left side, but not the right
+        Position -= new Vector2(0, 1).Rotate(orientationAngle);
       }
 
-      if (noObstruction && noOffSurface) {
+      if (notObstructed && notOffSurface) {
         return true;
       }
     }

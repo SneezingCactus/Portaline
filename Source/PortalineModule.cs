@@ -70,7 +70,6 @@ public class PortalineModule : EverestModule {
     On.Celeste.Level.LoadLevel += LevelBegin;
   }
 
-
   public override void Unload() {
     On.Celeste.Player.Render -= PlayerRender;
     On.Celeste.Player.Update -= PlayerUpdate;
@@ -92,8 +91,12 @@ public class PortalineModule : EverestModule {
   }
 
   private void LevelBegin(On.Celeste.Level.orig_LoadLevel orig, Level self, Player.IntroTypes playerIntro, bool isFromLoader) {
-    self.Add(new EmancipationGrillRenderer());
-    gunEnabledInLevel = false;
+    // only do this at the start of a level, not when dying or moving to a different zone of a level
+    if (isFromLoader) {
+      self.Add(new EmancipationGrillRenderer());
+      gunEnabledInLevel = false;
+    }
+
     orig(self, playerIntro, isFromLoader);
   }
 
