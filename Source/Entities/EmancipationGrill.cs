@@ -22,8 +22,14 @@ public class EmancipationGrill : PortalBlocker {
   private readonly List<GrillParticle> particles = [];
 
   public bool horizontal;
+  public bool obstructable;
 
-  public EmancipationGrill(Vector2 position, float width, float height) : base(position) {
+  public bool obstructed = false;
+  public float barrierOpacity = 1;
+
+  public EmancipationGrill(Vector2 position, float width, float height, bool obstructable) : base(position) {
+    this.obstructable = obstructable;
+
     Depth = -10;
     int newSeed = Calc.Random.Next();
     Calc.PushRandom(newSeed);
@@ -32,7 +38,7 @@ public class EmancipationGrill : PortalBlocker {
     Collider = new Hitbox(width, height, 0, 0);
   }
 
-  public EmancipationGrill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Width, data.Height) { }
+  public EmancipationGrill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Width, data.Height, data.Bool("obstructable", false)) { }
 
   public override void Awake(Scene scene) {
     base.Awake(scene);
@@ -82,17 +88,43 @@ public class EmancipationGrill : PortalBlocker {
         particles[i] = particle;
       }
     }
+
+    if (!obstructable) return;
+
+    Rectangle obstructionRect;
+
+    if (horizontal) {
+      obstructionRect = new((int)Position.X, (int)Position.Y + 1, (int)Width, (int)Height - 2);
+    } else {
+      obstructionRect = new((int)Position.X + 1, (int)Position.Y, (int)Width - 2, (int)Height);
+    }
+
+    obstructed = Scene.CollideFirst<Solid>(obstructionRect) != null;
+    Collidable = !obstructed;
   }
 
   public override void Render() {
     base.Render();
+
+    MTexture edgeTexture;
+
+    if (obstructed) {
+      edgeTexture = Instance.emanciGrillEdgeInactiveTex;
+
+      barrierOpacity -= barrierOpacity * 0.5f;
+    } else {
+      edgeTexture = Instance.emanciGrillEdgeActiveTex;
+
+      barrierOpacity += (1 - barrierOpacity) * 0.2f;
+    }
+
     Color color = Color.RoyalBlue * 0.5f;
     foreach (GrillParticle particle in particles) {
-      Draw.Pixel.Draw(Position + particle.position, Vector2.Zero, color);
+      Draw.Pixel.Draw(Position + particle.position, Vector2.Zero, color * barrierOpacity);
     }
 
     if (horizontal) {
-      Instance.emancipationGrillTex.DrawJustified(
+      edgeTexture.DrawJustified(
         Position + new Vector2(0, Height),
         new Vector2(0, 0),
         Color.White,
@@ -100,7 +132,7 @@ public class EmancipationGrill : PortalBlocker {
         (float)Math.PI*1.5f
       );
 
-      Instance.emancipationGrillTex.DrawJustified(
+      edgeTexture.DrawJustified(
         Position + new Vector2(Width, 0),
         new Vector2(0, 0),
         Color.White,
@@ -108,7 +140,7 @@ public class EmancipationGrill : PortalBlocker {
         (float)Math.PI*0.5f
       );
     } else {
-      Instance.emancipationGrillTex.DrawJustified(
+      edgeTexture.DrawJustified(
         Position,
         new Vector2(0, 0),
         Color.White,
@@ -116,7 +148,7 @@ public class EmancipationGrill : PortalBlocker {
         0
       );
 
-      Instance.emancipationGrillTex.DrawJustified(
+      edgeTexture.DrawJustified(
         Position + new Vector2(Width, Height),
         new Vector2(0, 0),
         Color.White,

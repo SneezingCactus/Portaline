@@ -18,7 +18,8 @@ emancipationGrill.placements = {
   name = "emancipation_grill_horizontal",
   data = {
       width = 8,
-      height = 8
+      height = 8,
+      obstructable = false
   }
 }
 
@@ -30,8 +31,8 @@ emancipationGrill.sprite = function (room, entity)
     
     table.insert(sprites, drawableRectangle.fromRectangle("fill", entity.x, entity.y + 1, entity.width, 14, "#00bfff88", "#00bfff88"))
 
-    table.insert(sprites, drawableSprite.fromTexture("Portaline/EmancipationGrill", entity):addPosition(4, 8))
-    table.insert(sprites, drawableSprite.fromTexture("Portaline/EmancipationGrill", entity):addPosition(width - 4, 8))
+    table.insert(sprites, drawableSprite.fromTexture("Portaline/EmancipationGrill/EdgeActive", entity):addPosition(4, 8))
+    table.insert(sprites, drawableSprite.fromTexture("Portaline/EmancipationGrill/EdgeActive", entity):addPosition(width - 4, 8))
 
     sprites[2].rotation = math.pi * 1.5
     sprites[3].rotation = math.pi * 0.5

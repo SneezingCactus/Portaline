@@ -4,8 +4,18 @@ entities.Portaline/EmancipationGrillVertical.placements.name.emancipation_grill_
 entities.Portaline/PortalGunGiverHorizontal.placements.name.portal_gun_giver_horizontal=Portal Gun Giver (Horizontal)
 entities.Portaline/PortalGunGiverVertical.placements.name.portal_gun_giver_vertical=Portal Gun Giver (Vertical)
 
+entities.Portaline/EmancipationGrillHorizontal.attributes.name.obstructable=Obstructable?
+entities.Portaline/EmancipationGrillHorizontal.attributes.description.obstructable=If set to true, the barrier will deactivate whenever it is obstructed by any solid object, such as zip movers, kevins, and cassette blocks. If set to false, the barrier will always be active.
+
+entities.Portaline/EmancipationGrillVertical.attributes.name.obstructable=Obstructable?
+entities.Portaline/EmancipationGrillVertical.attributes.description.obstructable=If set to true, the barrier will deactivate whenever it is obstructed by any solid object, such as zip movers, kevins, and cassette blocks. If set to false, the barrier will always be active.
+
 entities.Portaline/PortalGunGiverHorizontal.attributes.name.enableGun=Give Gun?
 entities.Portaline/PortalGunGiverHorizontal.attributes.description.enableGun=If set to true, the barrier will be coloured green and it will enable the portal gun upon crossing the barrier; if set to false, the barrier will be coloured red and it will disable the portal gun instead.
+entities.Portaline/PortalGunGiverHorizontal.attributes.name.obstructable=Obstructable?
+entities.Portaline/PortalGunGiverHorizontal.attributes.description.obstructable=If set to true, the barrier will deactivate whenever it is obstructed by any solid object, such as zip movers, kevins, and cassette blocks. If set to false, the barrier will always be active.
 
 entities.Portaline/PortalGunGiverVertical.attributes.name.enableGun=Give Gun?
 entities.Portaline/PortalGunGiverVertical.attributes.description.enableGun=If set to true, the barrier will be coloured green and it will enable the portal gun upon crossing the barrier; if set to false, the barrier will be coloured red and it will disable the portal gun instead.
+entities.Portaline/PortalGunGiverVertical.attributes.name.obstructable=Obstructable?
+entities.Portaline/PortalGunGiverVertical.attributes.description.obstructable=If set to true, the barrier will deactivate whenever it is obstructed by any solid object, such as zip movers, kevins, and cassette blocks. If set to false, the barrier will always be active.

@@ -16,12 +16,18 @@ public class PortalGunGiver : PortalBlocker {
   private readonly List<GrillParticle> particles = [];
   private Color color;
 
-  public bool enable;
   public bool horizontal;
+  public bool enableGun;
+  public bool obstructable;
 
-  public PortalGunGiver(Vector2 position, float width, float height, bool enable) : base(position) {
-    this.enable = enable;
-    color = enable ? new Color(0x00, 0xff, 0x1b) : new Color(0xff, 0x51, 0x51);
+  public bool obstructed = false;
+  public float barrierOpacity = 1;
+
+  public PortalGunGiver(Vector2 position, float width, float height, bool enableGun, bool obstructable) : base(position) {
+    this.enableGun = enableGun;
+    this.obstructable = obstructable;
+
+    color = enableGun ? new Color(0x00, 0xff, 0x1b) : new Color(0xff, 0x51, 0x51);
 
     Depth = -10;
     int newSeed = Calc.Random.Next();
@@ -31,7 +37,7 @@ public class PortalGunGiver : PortalBlocker {
     Collider = new Hitbox(width, height, 0, 0);
   }
 
-  public PortalGunGiver(EntityData data, Vector2 offset) : this(data.Position + offset, data.Width, data.Height, data.Bool("enableGun", true)) { }
+  public PortalGunGiver(EntityData data, Vector2 offset) : this(data.Position + offset, data.Width, data.Height, data.Bool("enableGun", true), data.Bool("obstructable", false)) { }
 
   public override void Awake(Scene scene) {
     base.Awake(scene);
@@ -81,19 +87,38 @@ public class PortalGunGiver : PortalBlocker {
         particles[i] = particle;
       }
     }
+
+    if (!obstructable) return;
+
+    Rectangle obstructionRect;
+
+    if (horizontal) {
+      obstructionRect = new((int)Position.X, (int)Position.Y + 1, (int)Width, (int)Height - 2);
+    } else {
+      obstructionRect = new((int)Position.X + 1, (int)Position.Y, (int)Width - 2, (int)Height);
+    }
+
+    obstructed = Scene.CollideFirst<Solid>(obstructionRect) != null;
+    Collidable = !obstructed;
   }
 
   public override void Render() {
     base.Render();
 
-    if (horizontal) {
-      Draw.Rect(X, Y - 1, Width, 18, color * 0.2f);
+    if (obstructed) {
+      barrierOpacity -= barrierOpacity * 0.8f;
     } else {
-      Draw.Rect(X - 1, Y, 18, Height, color * 0.2f);
+      barrierOpacity += (1 - barrierOpacity) * 0.2f;
+    }
+
+    if (horizontal) {
+      Draw.Rect(X, Y - 1, Width, 18, color * 0.2f * barrierOpacity);
+    } else {
+      Draw.Rect(X - 1, Y, 18, Height, color * 0.2f * barrierOpacity);
     }
 
     foreach (GrillParticle particle in particles) {
-      Draw.Pixel.Draw(Position + particle.position, Vector2.Zero, color * 0.5f);
+      Draw.Pixel.Draw(Position + particle.position, Vector2.Zero, color * 0.5f * barrierOpacity);
     }
 
     if (horizontal) {
@@ -135,7 +160,7 @@ public class PortalGunGiver : PortalBlocker {
     Instance.portalGunGiverSymbolTex.DrawJustified(
       Position + new Vector2(Width / 2, Height / 2),
       new Vector2(0.5f, 0.5f),
-      color,
+      color * barrierOpacity,
       new Vector2(1, 1),
       0
     );

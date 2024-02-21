@@ -20,6 +20,8 @@ public class PortalineModule : EverestModule {
 
   public override Type SettingsType => typeof(PortalineModuleSettings);
   public static PortalineModuleSettings Settings => (PortalineModuleSettings)Instance._Settings;
+  public override Type SessionType => typeof(PortalineModuleSession);
+  public static PortalineModuleSession Session => (PortalineModuleSession)Instance._Session;
 
   private static MouseState State => Mouse.GetState();
   private static Vector2 MouseCursorPos => Vector2.Transform(new Vector2(State.X, State.Y), Matrix.Invert(Engine.ScreenMatrix));
@@ -27,7 +29,8 @@ public class PortalineModule : EverestModule {
   private Texture2D aimTex;
   private Texture2D aimTexBlue;
   private Texture2D aimTexOrange;
-  public MTexture emancipationGrillTex;
+  public MTexture emanciGrillEdgeInactiveTex;
+  public MTexture emanciGrillEdgeActiveTex;
   public MTexture portalGunGiverEdgeTex;
   public MTexture portalGunGiverSymbolTex;
   public MTexture portalTex;
@@ -35,7 +38,6 @@ public class PortalineModule : EverestModule {
 
   public PortalEntity bluePortal;
   public PortalEntity orangePortal;
-  public bool gunEnabledInLevel;
 
   private VirtualJoystick joystickAim;
   private Vector2 oldJoystickAim;
@@ -48,12 +50,13 @@ public class PortalineModule : EverestModule {
   }
 
   public override void LoadContent(bool firstLoad) {
-    aimTex = GFX.Game["Portaline/AimIndicator"].Texture.Texture;
-    aimTexBlue = GFX.Game["Portaline/AimIndicatorBlue"].Texture.Texture;
-    aimTexOrange = GFX.Game["Portaline/AimIndicatorOrange"].Texture.Texture;
-    emancipationGrillTex = GFX.Game["Portaline/EmancipationGrill"];
-    portalGunGiverEdgeTex = GFX.Game["Portaline/PortalGunGiver/edge"];
-    portalGunGiverSymbolTex = GFX.Game["Portaline/PortalGunGiver/symbol"];
+    aimTex = GFX.Game["Portaline/AimIndicator/Main"].Texture.Texture;
+    aimTexBlue = GFX.Game["Portaline/AimIndicator/BlueActive"].Texture.Texture;
+    aimTexOrange = GFX.Game["Portaline/AimIndicator/OrangeActive"].Texture.Texture;
+    emanciGrillEdgeInactiveTex = GFX.Game["Portaline/EmancipationGrill/EdgeInactive"];
+    emanciGrillEdgeActiveTex = GFX.Game["Portaline/EmancipationGrill/EdgeActive"];
+    portalGunGiverEdgeTex = GFX.Game["Portaline/PortalGunGiver/Edge"];
+    portalGunGiverSymbolTex = GFX.Game["Portaline/PortalGunGiver/Symbol"];
     gunTex = GFX.Game["Portaline/Gun"];
     portalTex = GFX.Game["Portaline/Portal"];
   }
@@ -94,7 +97,7 @@ public class PortalineModule : EverestModule {
     // only do this at the start of a level, not when dying or moving to a different zone of a level
     if (isFromLoader) {
       self.Add(new EmancipationGrillRenderer());
-      gunEnabledInLevel = false;
+      //Session.gunEnabledInLevel = false;
     }
 
     orig(self, playerIntro, isFromLoader);
@@ -103,7 +106,7 @@ public class PortalineModule : EverestModule {
   private void LevelRender(On.Celeste.Level.orig_Render orig, Level self) {
     orig(self);
 
-    if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
+    if (!(Settings.PortalGunOverrideEnable || Session.gunEnabledInLevel)) return;
 
     Draw.SpriteBatch.Begin(0, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Engine.ScreenMatrix);
     Draw.SpriteBatch.Draw(aimTex, CursorPos, null, Color.White, 0f, new Vector2(aimTex.Width / 2f, aimTex.Height / 2f), 4f, 0, 0f);
@@ -116,7 +119,7 @@ public class PortalineModule : EverestModule {
     orig(self);
 
     // portal gun enabled / in cutscene check
-    if ((!(Settings.PortalGunOverrideEnable || gunEnabledInLevel) || self.InCutscene) && (bluePortal != null || orangePortal != null)) {
+    if ((!(Settings.PortalGunOverrideEnable || Session.gunEnabledInLevel) || self.InCutscene) && (bluePortal != null || orangePortal != null)) {
       Audio.Play("event:/sneezingcactus/portal_remove");
       bluePortal?.Kill();
       orangePortal?.Kill();
@@ -134,7 +137,7 @@ public class PortalineModule : EverestModule {
   private void PlayerRender(On.Celeste.Player.orig_Render orig, Player self) {
     orig(self);
 
-    if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
+    if (!(Settings.PortalGunOverrideEnable || Session.gunEnabledInLevel)) return;
 
     Vector2 gunVector = ToCursor(self, CursorPos);
 
@@ -169,15 +172,15 @@ public class PortalineModule : EverestModule {
 #pragma warning disable IDE0220 // Add explicit cast
     foreach (PortalGunGiver entity in self.Scene.Tracker.GetEntities<PortalGunGiver>()) {
       if (self.CollideCheck(entity)) {
-        if (entity.enable && !Instance.gunEnabledInLevel) {
+        if (entity.enableGun && !Session.gunEnabledInLevel) {
           Audio.Play("event:/sneezingcactus/portalgun_activation");
         }
-        Instance.gunEnabledInLevel = entity.enable;
+        Session.gunEnabledInLevel = entity.enableGun;
       }
     }
 #pragma warning restore IDE0220 // Add explicit cast
 
-    if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) return;
+    if (!(Settings.PortalGunOverrideEnable || Session.gunEnabledInLevel)) return;
 
     // cursor pos update
     if (joystickAim.Value.LengthSquared() > 0.04f) {
@@ -244,7 +247,7 @@ public class PortalineModule : EverestModule {
   }
 
   private void PlayerCollideH(On.Celeste.Player.orig_OnCollideH orig, Player self, CollisionData data) {
-    if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) {
+    if (!(Settings.PortalGunOverrideEnable || Session.gunEnabledInLevel)) {
       orig(self, data);
       return;
     }
@@ -260,7 +263,7 @@ public class PortalineModule : EverestModule {
   }
 
   private void PlayerCollideV(On.Celeste.Player.orig_OnCollideV orig, Player self, CollisionData data) {
-    if (!(Settings.PortalGunOverrideEnable || gunEnabledInLevel)) {
+    if (!(Settings.PortalGunOverrideEnable || Session.gunEnabledInLevel)) {
       orig(self, data);
       return;
     }

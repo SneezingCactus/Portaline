@@ -19,7 +19,8 @@ portalGunGiver.placements = {
   data = {
       width = 16,
       height = 16,
-      enableGun = true
+      enableGun = true,
+      obstructable = false
   }
 }
 
@@ -39,11 +40,11 @@ portalGunGiver.sprite = function (room, entity)
     end
 
     table.insert(sprites, drawableRectangle.fromRectangle("fill", entity.x - 1, entity.y, 18, entity.height, colorTrans, colorTrans))
-    table.insert(sprites, drawableSprite.fromTexture("Portaline/PortalGunGiver/edge", entity):addPosition(8, 4))
-    table.insert(sprites, drawableSprite.fromTexture("Portaline/PortalGunGiver/edge", entity):addPosition(8, entity.height - 4))
+    table.insert(sprites, drawableSprite.fromTexture("Portaline/PortalGunGiver/Edge", entity):addPosition(8, 4))
+    table.insert(sprites, drawableSprite.fromTexture("Portaline/PortalGunGiver/Edge", entity):addPosition(8, entity.height - 4))
     sprites[3].rotation = math.pi
 
-    table.insert(sprites, drawableSprite.fromTexture("Portaline/PortalGunGiver/symbol", entity):addPosition(entity.width / 2, entity.height / 2))
+    table.insert(sprites, drawableSprite.fromTexture("Portaline/PortalGunGiver/Symbol", entity):addPosition(entity.width / 2, entity.height / 2))
     sprites[4]:setColor(color)
 
     return sprites

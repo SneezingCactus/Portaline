@@ -28,12 +28,12 @@ public class EmancipationGrillRenderer : Entity {
 
   private void OnRenderBloom() {
     foreach (EmancipationGrill grill in list) {
-      if (!grill.Visible) continue;
+      if (!grill.Visible ) continue;
 
       if (grill.horizontal) {
-        Draw.Rect(grill.X, grill.Y + 1, grill.Width, grill.Height - 2, theColor);
+        Draw.Rect(grill.X, grill.Y + 1, grill.Width, grill.Height - 2, theColor * grill.barrierOpacity);
       } else {
-        Draw.Rect(grill.X + 1, grill.Y, grill.Width - 2, grill.Height, theColor);
+        Draw.Rect(grill.X + 1, grill.Y, grill.Width - 2, grill.Height, theColor * grill.barrierOpacity);
       }
     }
   }
@@ -43,7 +43,7 @@ public class EmancipationGrillRenderer : Entity {
     foreach (EmancipationGrill grill in list) {
       if (!grill.Visible) continue;
 
-      Draw.Rect(grill.Collider, theColor * 0.5f);
+      Draw.Rect(grill.Collider, theColor * 0.5f * grill.barrierOpacity);
     }
   }
 }
